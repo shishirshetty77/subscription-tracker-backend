@@ -2,4 +2,6 @@ import { config } from 'dotenv'
 
 config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` })
 
-export const { PORT, NODE_ENV } = process.env
+export const { NODE_ENV } = process.env
+export const PORT = Number(process.env.PORT || 3000)
+export const DB_URL = process.env.DB_URL || process.env.MONGODB_URI || 'mongodb://localhost:27017/subscriptions'
