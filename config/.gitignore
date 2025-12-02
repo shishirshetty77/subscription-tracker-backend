@@ -1,0 +1,6 @@
+# Ignore dotenv local environment files stored in config
+.env.*.local
+.env.local
+
+# Ignore any local-only files
+*.local
