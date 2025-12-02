@@ -1,5 +1,5 @@
 import express from 'express'
-import { PORT } from './config/env.js';   
+import { PORT } from './config/env.js';
 
 import subscriptionRouter from './routes/subscription.routes.js';
 import userRouter from './routes/user.routes.js';
@@ -16,7 +16,9 @@ app.get('/',(req,res)=>{
     res.send('welcome to the subscription tracker api');
 });
 
-app.listen(PORT, () => {
-    console.log('subscription tracker api is running at the url http://localhost:${PORT}')
+const port = PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`subscription tracker api is running at the url http://localhost:${port}`)
 })
 export default app;
