@@ -1,0 +1,11 @@
+services:
+  api:
+    build: .
+    container_name: subscription-tracker-api
+    ports:
+      - "5500:5500"
+    env_file:
+      - .env.development.local
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
