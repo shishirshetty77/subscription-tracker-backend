@@ -12,6 +12,19 @@ export const signUp = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
+    // Input validation
+    if (!name || !email || !password) {
+      const error = new Error('Please provide name, email and password');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    if (password.length < 6) {
+      const error = new Error('Password must be at least 6 characters');
+      error.statusCode = 400;
+      throw error;
+    }
+
     // Check if a user already exists
     const existingUser = await User.findOne({ email });
 
@@ -32,12 +45,16 @@ export const signUp = async (req, res, next) => {
     await session.commitTransaction();
     session.endSession();
 
+    // Remove password from response
+    const userResponse = newUsers[0].toObject();
+    delete userResponse.password;
+
     res.status(201).json({
       success: true,
       message: 'User created successfully',
       data: {
         token,
-        user: newUsers[0],
+        user: userResponse,
       }
     })
   } catch (error) {
@@ -50,6 +67,13 @@ export const signUp = async (req, res, next) => {
 export const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
+    // Input validation
+    if (!email || !password) {
+      const error = new Error('Please provide email and password');
+      error.statusCode = 400;
+      throw error;
+    }
 
     const user = await User.findOne({ email });
 
@@ -69,12 +93,16 @@ export const signIn = async (req, res, next) => {
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
+    // Remove password from response
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
     res.status(200).json({
       success: true,
       message: 'User signed in successfully',
       data: {
         token,
-        user,
+        user: userResponse,
       }
     });
   } catch (error) {
